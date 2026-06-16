@@ -1,6 +1,36 @@
+import { useState } from "react";
 import "./App.css";
 
 function App() {
+  const [selectedRole, setSelectedRole] = useState("");
+
+  const roles = [
+    {
+      name: "SDE",
+      description: "Practice DSA, OOP, DBMS, OS, CN, and coding interview questions.",
+    },
+    {
+      name: "Frontend Developer",
+      description: "Practice HTML, CSS, JavaScript, React, UI design, and web concepts.",
+    },
+    {
+      name: "Backend Developer",
+      description: "Practice Node.js, Express, APIs, databases, authentication, and server logic.",
+    },
+    {
+      name: "Data Analyst",
+      description: "Practice SQL, Excel, Python, statistics, dashboards, and data interpretation.",
+    },
+    {
+      name: "HR Round",
+      description: "Practice introduction, strengths, weaknesses, goals, and behavioral questions.",
+    },
+  ];
+
+  const handleRoleSelect = (roleName) => {
+    setSelectedRole(roleName);
+  };
+
   return (
     <div className="app">
       <nav className="navbar">
@@ -18,8 +48,7 @@ function App() {
           <p className="badge">AI Mock Interview Platform</p>
 
           <h1>
-            Practice interviews with{" "}
-            <span>AI-powered feedback</span>
+            Practice interviews with <span>AI-powered feedback</span>
           </h1>
 
           <p className="hero-text">
@@ -29,7 +58,9 @@ function App() {
           </p>
 
           <div className="hero-buttons">
-            <button className="primary-btn">Start Interview</button>
+            <a href="#roles" className="primary-btn">
+              Start Interview
+            </a>
             <button className="secondary-btn">View Progress</button>
           </div>
         </div>
@@ -86,13 +117,36 @@ function App() {
       <section className="roles" id="roles">
         <h2>Choose Your Interview Role</h2>
 
+        <p className="roles-subtitle">
+          Select one role to begin your mock interview preparation.
+        </p>
+
         <div className="role-grid">
-          <div className="role-card">SDE</div>
-          <div className="role-card">Frontend Developer</div>
-          <div className="role-card">Backend Developer</div>
-          <div className="role-card">Data Analyst</div>
-          <div className="role-card">HR Round</div>
+          {roles.map((role) => (
+            <div
+              key={role.name}
+              className={
+                selectedRole === role.name ? "role-card selected" : "role-card"
+              }
+              onClick={() => handleRoleSelect(role.name)}
+            >
+              <h3>{role.name}</h3>
+              <p>{role.description}</p>
+            </div>
+          ))}
         </div>
+
+        {selectedRole && (
+          <div className="selected-role-box">
+            <p>
+              Selected Role: <span>{selectedRole}</span>
+            </p>
+
+            <button className="primary-btn">
+              Start {selectedRole} Interview
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
