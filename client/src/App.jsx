@@ -5,6 +5,8 @@ function App() {
   const [selectedRole, setSelectedRole] = useState("");
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [interviewSubmitted, setInterviewSubmitted] = useState(false);
 
   const roles = [
     {
@@ -76,13 +78,26 @@ function App() {
     setSelectedRole(roleName);
     setInterviewStarted(false);
     setCurrentQuestionIndex(0);
+    setAnswers({});
+    setInterviewSubmitted(false);
   };
 
   const handleStartInterview = () => {
     if (selectedRole) {
       setInterviewStarted(true);
       setCurrentQuestionIndex(0);
+      setAnswers({});
+      setInterviewSubmitted(false);
     }
+  };
+
+  const handleAnswerChange = (event) => {
+    const answerText = event.target.value;
+
+    setAnswers({
+      ...answers,
+      [currentQuestionIndex]: answerText,
+    });
   };
 
   const handleNextQuestion = () => {
@@ -102,10 +117,20 @@ function App() {
   const handleBackToRoles = () => {
     setInterviewStarted(false);
     setCurrentQuestionIndex(0);
+    setAnswers({});
+    setInterviewSubmitted(false);
+  };
+
+  const handleSubmitInterview = () => {
+    setInterviewSubmitted(true);
   };
 
   const selectedQuestions = selectedRole ? questions[selectedRole] : [];
   const currentQuestion = selectedQuestions[currentQuestionIndex];
+  const currentAnswer = answers[currentQuestionIndex] || "";
+  const answeredCount = Object.values(answers).filter(
+    (answer) => answer.trim() !== ""
+  ).length;
 
   return (
     <div className="app">
@@ -254,33 +279,67 @@ function App() {
               ></div>
             </div>
 
-            <div className="question-box">
-              <p>{currentQuestion}</p>
-            </div>
+            <p className="answered-count">
+              Answered {answeredCount} of {selectedQuestions.length} questions
+            </p>
 
-            <div className="question-actions">
-              <button
-                className="secondary-btn"
-                onClick={handlePreviousQuestion}
-                disabled={currentQuestionIndex === 0}
-              >
-                Previous
-              </button>
+            {!interviewSubmitted ? (
+              <>
+                <div className="question-box">
+                  <p>{currentQuestion}</p>
+                </div>
 
-              <button
-                className="primary-btn"
-                onClick={handleNextQuestion}
-                disabled={currentQuestionIndex === selectedQuestions.length - 1}
-              >
-                Next
-              </button>
-            </div>
+                <div className="answer-box">
+                  <label>Your Answer</label>
 
-            {currentQuestionIndex === selectedQuestions.length - 1 && (
-              <p className="end-message">
-                You reached the last question. In the next level, we will add an
-                answer box.
-              </p>
+                  <textarea
+                    placeholder="Type your answer here..."
+                    value={currentAnswer}
+                    onChange={handleAnswerChange}
+                  ></textarea>
+                </div>
+
+                <div className="question-actions">
+                  <button
+                    className="secondary-btn"
+                    onClick={handlePreviousQuestion}
+                    disabled={currentQuestionIndex === 0}
+                  >
+                    Previous
+                  </button>
+
+                  {currentQuestionIndex === selectedQuestions.length - 1 ? (
+                    <button
+                      className="primary-btn"
+                      onClick={handleSubmitInterview}
+                    >
+                      Submit Interview
+                    </button>
+                  ) : (
+                    <button className="primary-btn" onClick={handleNextQuestion}>
+                      Next
+                    </button>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="submission-box">
+                <h2>Interview Submitted Successfully!</h2>
+
+                <p>
+                  You answered {answeredCount} out of{" "}
+                  {selectedQuestions.length} questions.
+                </p>
+
+                <p>
+                  In the next level, we will create a result page and show your
+                  answers question-wise.
+                </p>
+
+                <button className="primary-btn" onClick={handleBackToRoles}>
+                  Practice Another Role
+                </button>
+              </div>
             )}
           </div>
         </section>
