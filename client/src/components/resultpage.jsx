@@ -1,11 +1,11 @@
 function ResultPage({
   selectedRole,
-  selectedQuestions,
-  answers,
   totalQuestions,
   answeredCount,
   unansweredCount,
   completionPercentage,
+  answerFeedback,
+  overallScore,
   handleRetakeInterview,
   handleBackToRoles,
 }) {
@@ -18,6 +18,11 @@ function ResultPage({
           <p className="result-role">
             Role: <span>{selectedRole}</span>
           </p>
+
+          <div className="overall-score-box">
+            <h3>{overallScore}%</h3>
+            <p>Overall Interview Score</p>
+          </div>
 
           <div className="result-stats">
             <div className="result-card">
@@ -42,18 +47,29 @@ function ResultPage({
           </div>
 
           <div className="answer-summary">
-            <h3>Your Answers</h3>
+            <h3>AI-Style Feedback</h3>
 
-            {selectedQuestions.map((question, index) => (
+            {answerFeedback.map((item, index) => (
               <div className="summary-card" key={index}>
                 <h4>
-                  Question {index + 1}: {question}
+                  Question {index + 1}: {item.question}
                 </h4>
 
                 <p>
-                  {answers[index] && answers[index].trim() !== ""
-                    ? answers[index]
-                    : "No answer provided."}
+                  <strong>Your Answer:</strong>{" "}
+                  {item.answer.trim() !== "" ? item.answer : "No answer provided."}
+                </p>
+
+                <p>
+                  <strong>Score:</strong> {item.score}%
+                </p>
+
+                <p>
+                  <strong>Feedback:</strong> {item.feedback}
+                </p>
+
+                <p>
+                  <strong>Suggestion:</strong> {item.suggestion}
                 </p>
               </div>
             ))}

@@ -725,3 +725,22 @@ button:disabled {
   background: #2563eb;
   border-radius: 20px;
 }
+.overall-score-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 18px;
+  padding: 25px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.overall-score-box h3 {
+  font-size: 42px;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+
+.overall-score-box p {
+  color: #6b7280;
+  font-weight: 600;
+}

@@ -65,6 +65,7 @@ function Dashboard({
                 <p>Total Questions: {interview.totalQuestions}</p>
                 <p>Answered: {interview.answeredCount}</p>
                 <p>Unanswered: {interview.unansweredCount}</p>
+                <p>Overall Score: {interview.overallScore || 0}%</p>
 
                 <div className="history-progress">
                   <div
