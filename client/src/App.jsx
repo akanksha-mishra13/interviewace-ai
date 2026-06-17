@@ -16,6 +16,7 @@ import RoleSelection from "./components/roleselection";
 import InterviewScreen from "./components/interviewscreen";
 import ResultPage from "./components/resultpage";
 import Dashboard from "./components/dashboard";
+import Footer from "./components/footer";
 
 import { roles } from "./data/roles";
 import { questions } from "./data/questions";
@@ -272,6 +273,8 @@ function AppContent() {
           }
         />
       </Routes>
+
+      <Footer />
     </div>
   );
 }

@@ -767,3 +767,42 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.footer {
+  margin-top: 60px;
+  padding: 45px 8%;
+  background: #111827;
+  color: white;
+  text-align: center;
+}
+
+.footer h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.footer p {
+  color: #d1d5db;
+  max-width: 650px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.footer-links span {
+  background: #1f2937;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.footer-copy {
+  font-size: 14px;
+  color: #9ca3af;
+}
