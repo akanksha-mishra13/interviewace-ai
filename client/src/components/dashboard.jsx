@@ -6,14 +6,38 @@ function Dashboard({
   interviewHistory,
   handleClearHistory,
 }) {
+  const totalAttempts = interviewHistory.length;
+
+  const averageScore =
+    totalAttempts > 0
+      ? Math.round(
+          interviewHistory.reduce(
+            (sum, interview) => sum + (interview.overallScore || 0),
+            0
+          ) / totalAttempts
+        )
+      : 0;
+
+  const bestInterview =
+    totalAttempts > 0
+      ? interviewHistory.reduce((best, current) =>
+          (current.overallScore || 0) > (best.overallScore || 0)
+            ? current
+            : best
+        )
+      : null;
+
+  const bestScore = bestInterview ? bestInterview.overallScore || 0 : 0;
+  const bestRole = bestInterview ? bestInterview.role : "None";
+
   return (
     <section className="dashboard-section">
       <div className="dashboard-header">
         <p className="badge">Student Dashboard</p>
         <h1>Your Interview Preparation Dashboard</h1>
         <p>
-          Track your mock interview practice, selected role, and preparation
-          progress from one place.
+          Track your mock interview practice, scores, selected role, and
+          preparation progress from one place.
         </p>
       </div>
 
@@ -24,8 +48,25 @@ function Dashboard({
         </div>
 
         <div className="dashboard-card">
+          <h3>{totalAttempts}</h3>
+          <p>Total Attempts</p>
+        </div>
+
+        <div className="dashboard-card">
+          <h3>{averageScore}%</h3>
+          <p>Average Score</p>
+        </div>
+
+        <div className="dashboard-card">
+          <h3>{bestScore}%</h3>
+          <p>Best Score</p>
+        </div>
+      </div>
+
+      <div className="dashboard-grid">
+        <div className="dashboard-card">
           <h3>{selectedRole || "None"}</h3>
-          <p>Selected Role</p>
+          <p>Current Selected Role</p>
         </div>
 
         <div className="dashboard-card">
@@ -36,6 +77,11 @@ function Dashboard({
         <div className="dashboard-card">
           <h3>{answeredCount}</h3>
           <p>Current Answered</p>
+        </div>
+
+        <div className="dashboard-card">
+          <h3>{bestRole}</h3>
+          <p>Best Role</p>
         </div>
       </div>
 
@@ -65,16 +111,17 @@ function Dashboard({
                 <p>Total Questions: {interview.totalQuestions}</p>
                 <p>Answered: {interview.answeredCount}</p>
                 <p>Unanswered: {interview.unansweredCount}</p>
+                <p>Completion: {interview.completionPercentage}%</p>
                 <p>Overall Score: {interview.overallScore || 0}%</p>
 
                 <div className="history-progress">
                   <div
                     className="history-progress-fill"
-                    style={{ width: `${interview.completionPercentage}%` }}
+                    style={{ width: `${interview.overallScore || 0}%` }}
                   ></div>
                 </div>
 
-                <strong>{interview.completionPercentage}% Completed</strong>
+                <strong>{interview.overallScore || 0}% Score</strong>
               </div>
             ))}
           </div>
