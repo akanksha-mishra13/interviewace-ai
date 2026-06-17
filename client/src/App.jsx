@@ -18,6 +18,7 @@ import ResultPage from "./components/resultpage";
 
 import { roles } from "./data/roles";
 import { questions } from "./data/questions";
+import Dashboard from "./components/dashboard";
 
 function AppContent() {
   const [selectedRole, setSelectedRole] = useState("");
@@ -164,6 +165,17 @@ function AppContent() {
             )
           }
         />
+        <Route
+  path="/dashboard"
+  element={
+    <Dashboard
+      roles={roles}
+      selectedRole={selectedRole}
+      totalQuestions={totalQuestions}
+      answeredCount={answeredCount}
+    />
+  }
+/>
       </Routes>
     </div>
   );
