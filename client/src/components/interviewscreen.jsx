@@ -4,6 +4,8 @@ function InterviewScreen({
   currentQuestionIndex,
   currentQuestion,
   currentAnswer,
+  currentWordCount,
+  canSubmitInterview,
   answeredCount,
   handleBackToRoles,
   handlePreviousQuestion,
@@ -51,6 +53,23 @@ function InterviewScreen({
             value={currentAnswer}
             onChange={handleAnswerChange}
           ></textarea>
+          <div className="answer-helper">
+  <p>Word Count: {currentWordCount}</p>
+
+  {currentWordCount === 0 && (
+    <p className="warning-text">Please write your answer before moving ahead.</p>
+  )}
+
+  {currentWordCount > 0 && currentWordCount < 15 && (
+    <p className="warning-text">
+      Try to write at least 15 words for better feedback.
+    </p>
+  )}
+
+  {currentWordCount >= 15 && (
+    <p className="success-text">Good answer length.</p>
+  )}
+</div>
         </div>
 
         <div className="question-actions">
@@ -63,9 +82,13 @@ function InterviewScreen({
           </button>
 
           {currentQuestionIndex === selectedQuestions.length - 1 ? (
-            <button className="primary-btn" onClick={handleSubmitInterview}>
-              Submit Interview
-            </button>
+            <button
+            className="primary-btn"
+            onClick={handleSubmitInterview}
+            disabled={!canSubmitInterview}
+        >
+            Submit Interview
+        </button>
           ) : (
             <button className="primary-btn" onClick={handleNextQuestion}>
               Next

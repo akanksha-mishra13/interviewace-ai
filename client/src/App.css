@@ -744,3 +744,26 @@ button:disabled {
   color: #6b7280;
   font-weight: 600;
 }
+.answer-helper {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.answer-helper p {
+  margin-bottom: 6px;
+}
+
+.warning-text {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.success-text {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
