@@ -1,4 +1,11 @@
-function Dashboard({ roles, selectedRole, totalQuestions, answeredCount }) {
+function Dashboard({
+  roles,
+  selectedRole,
+  totalQuestions,
+  answeredCount,
+  interviewHistory,
+  handleClearHistory,
+}) {
   return (
     <section className="dashboard-section">
       <div className="dashboard-header">
@@ -23,13 +30,54 @@ function Dashboard({ roles, selectedRole, totalQuestions, answeredCount }) {
 
         <div className="dashboard-card">
           <h3>{totalQuestions}</h3>
-          <p>Total Questions</p>
+          <p>Current Questions</p>
         </div>
 
         <div className="dashboard-card">
           <h3>{answeredCount}</h3>
-          <p>Answered Questions</p>
+          <p>Current Answered</p>
         </div>
+      </div>
+
+      <div className="dashboard-panel">
+        <div className="history-header">
+          <h2>Interview History</h2>
+
+          {interviewHistory.length > 0 && (
+            <button className="secondary-btn" onClick={handleClearHistory}>
+              Clear History
+            </button>
+          )}
+        </div>
+
+        {interviewHistory.length === 0 ? (
+          <p className="empty-history">
+            No interview history yet. Complete one mock interview to see your
+            progress here.
+          </p>
+        ) : (
+          <div className="history-list">
+            {interviewHistory.map((interview) => (
+              <div className="history-card" key={interview.id}>
+                <h3>{interview.role}</h3>
+
+                <p>Date: {interview.date}</p>
+                <p>Total Questions: {interview.totalQuestions}</p>
+                <p>Answered: {interview.answeredCount}</p>
+                <p>Unanswered: {interview.unansweredCount}</p>
+
+                <div className="history-progress">
+                  <div
+                    className="history-progress-fill"
+                    style={{ width: `${interview.completionPercentage}%` }}
+                  ></div>
+                </div>
+
+                <strong>{interview.completionPercentage}% Completed</strong>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="dashboard-panel">

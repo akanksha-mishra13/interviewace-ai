@@ -15,10 +15,10 @@ import Features from "./components/features";
 import RoleSelection from "./components/roleselection";
 import InterviewScreen from "./components/interviewscreen";
 import ResultPage from "./components/resultpage";
+import Dashboard from "./components/dashboard";
 
 import { roles } from "./data/roles";
 import { questions } from "./data/questions";
-import Dashboard from "./components/dashboard";
 
 function AppContent() {
   const [selectedRole, setSelectedRole] = useState("");
@@ -26,7 +26,26 @@ function AppContent() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
 
+  const [interviewHistory, setInterviewHistory] = useState(() => {
+    const savedHistory = localStorage.getItem("interviewHistory");
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  });
+
   const navigate = useNavigate();
+
+  const selectedQuestions = selectedRole ? questions[selectedRole] : [];
+  const currentQuestion = selectedQuestions[currentQuestionIndex];
+  const currentAnswer = answers[currentQuestionIndex] || "";
+
+  const answeredCount = Object.values(answers).filter(
+    (answer) => answer.trim() !== ""
+  ).length;
+
+  const totalQuestions = selectedQuestions.length;
+  const unansweredCount = totalQuestions - answeredCount;
+
+  const completionPercentage =
+    totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
 
   const handleRoleSelect = (roleName) => {
     setSelectedRole(roleName);
@@ -54,8 +73,6 @@ function AppContent() {
   };
 
   const handleNextQuestion = () => {
-    const totalQuestions = questions[selectedRole].length;
-
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
@@ -76,6 +93,21 @@ function AppContent() {
   };
 
   const handleSubmitInterview = () => {
+    const newInterview = {
+      id: Date.now(),
+      role: selectedRole,
+      totalQuestions: totalQuestions,
+      answeredCount: answeredCount,
+      unansweredCount: unansweredCount,
+      completionPercentage: completionPercentage,
+      date: new Date().toLocaleString(),
+    };
+
+    const updatedHistory = [newInterview, ...interviewHistory];
+
+    setInterviewHistory(updatedHistory);
+    localStorage.setItem("interviewHistory", JSON.stringify(updatedHistory));
+
     navigate("/result");
   };
 
@@ -86,19 +118,10 @@ function AppContent() {
     navigate("/interview");
   };
 
-  const selectedQuestions = selectedRole ? questions[selectedRole] : [];
-  const currentQuestion = selectedQuestions[currentQuestionIndex];
-  const currentAnswer = answers[currentQuestionIndex] || "";
-
-  const answeredCount = Object.values(answers).filter(
-    (answer) => answer.trim() !== ""
-  ).length;
-
-  const totalQuestions = selectedQuestions.length;
-  const unansweredCount = totalQuestions - answeredCount;
-
-  const completionPercentage =
-    totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+  const handleClearHistory = () => {
+    setInterviewHistory([]);
+    localStorage.removeItem("interviewHistory");
+  };
 
   return (
     <div className="app">
@@ -165,17 +188,20 @@ function AppContent() {
             )
           }
         />
+
         <Route
-  path="/dashboard"
-  element={
-    <Dashboard
-      roles={roles}
-      selectedRole={selectedRole}
-      totalQuestions={totalQuestions}
-      answeredCount={answeredCount}
-    />
-  }
-/>
+          path="/dashboard"
+          element={
+            <Dashboard
+              roles={roles}
+              selectedRole={selectedRole}
+              totalQuestions={totalQuestions}
+              answeredCount={answeredCount}
+              interviewHistory={interviewHistory}
+              handleClearHistory={handleClearHistory}
+            />
+          }
+        />
       </Routes>
     </div>
   );
