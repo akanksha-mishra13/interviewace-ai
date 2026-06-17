@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router";
+
 import "./App.css";
 
 import Navbar from "./components/navbar";
@@ -7,23 +15,23 @@ import Features from "./components/features";
 import RoleSelection from "./components/roleselection";
 import InterviewScreen from "./components/interviewscreen";
 import ResultPage from "./components/resultpage";
+
 import { roles } from "./data/roles";
 import { questions } from "./data/questions";
 
-function App() {
+function AppContent() {
   const [selectedRole, setSelectedRole] = useState("");
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [interviewSubmitted, setInterviewSubmitted] = useState(false);
 
-  
+  const navigate = useNavigate();
+
   const handleRoleSelect = (roleName) => {
     setSelectedRole(roleName);
     setInterviewStarted(false);
     setCurrentQuestionIndex(0);
     setAnswers({});
-    setInterviewSubmitted(false);
   };
 
   const handleStartInterview = () => {
@@ -31,7 +39,7 @@ function App() {
       setInterviewStarted(true);
       setCurrentQuestionIndex(0);
       setAnswers({});
-      setInterviewSubmitted(false);
+      navigate("/interview");
     }
   };
 
@@ -59,20 +67,22 @@ function App() {
   };
 
   const handleBackToRoles = () => {
+    setSelectedRole("");
     setInterviewStarted(false);
     setCurrentQuestionIndex(0);
     setAnswers({});
-    setInterviewSubmitted(false);
+    navigate("/");
   };
 
   const handleSubmitInterview = () => {
-    setInterviewSubmitted(true);
+    navigate("/result");
   };
 
   const handleRetakeInterview = () => {
+    setInterviewStarted(true);
     setCurrentQuestionIndex(0);
     setAnswers({});
-    setInterviewSubmitted(false);
+    navigate("/interview");
   };
 
   const selectedQuestions = selectedRole ? questions[selectedRole] : [];
@@ -85,6 +95,7 @@ function App() {
 
   const totalQuestions = selectedQuestions.length;
   const unansweredCount = totalQuestions - answeredCount;
+
   const completionPercentage =
     totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
 
@@ -92,50 +103,77 @@ function App() {
     <div className="app">
       <Navbar />
 
-      {!interviewStarted && (
-        <>
-          <Hero />
-          <Features />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
+              <Features />
 
-          <RoleSelection
-            roles={roles}
-            selectedRole={selectedRole}
-            handleRoleSelect={handleRoleSelect}
-            handleStartInterview={handleStartInterview}
-          />
-        </>
-      )}
-
-      {interviewStarted && !interviewSubmitted && (
-        <InterviewScreen
-          selectedRole={selectedRole}
-          selectedQuestions={selectedQuestions}
-          currentQuestionIndex={currentQuestionIndex}
-          currentQuestion={currentQuestion}
-          currentAnswer={currentAnswer}
-          answeredCount={answeredCount}
-          handleBackToRoles={handleBackToRoles}
-          handlePreviousQuestion={handlePreviousQuestion}
-          handleNextQuestion={handleNextQuestion}
-          handleAnswerChange={handleAnswerChange}
-          handleSubmitInterview={handleSubmitInterview}
+              <RoleSelection
+                roles={roles}
+                selectedRole={selectedRole}
+                handleRoleSelect={handleRoleSelect}
+                handleStartInterview={handleStartInterview}
+              />
+            </>
+          }
         />
-      )}
 
-      {interviewStarted && interviewSubmitted && (
-        <ResultPage
-          selectedRole={selectedRole}
-          selectedQuestions={selectedQuestions}
-          answers={answers}
-          totalQuestions={totalQuestions}
-          answeredCount={answeredCount}
-          unansweredCount={unansweredCount}
-          completionPercentage={completionPercentage}
-          handleRetakeInterview={handleRetakeInterview}
-          handleBackToRoles={handleBackToRoles}
+        <Route
+          path="/interview"
+          element={
+            selectedRole && interviewStarted ? (
+              <InterviewScreen
+                selectedRole={selectedRole}
+                selectedQuestions={selectedQuestions}
+                currentQuestionIndex={currentQuestionIndex}
+                currentQuestion={currentQuestion}
+                currentAnswer={currentAnswer}
+                answeredCount={answeredCount}
+                handleBackToRoles={handleBackToRoles}
+                handlePreviousQuestion={handlePreviousQuestion}
+                handleNextQuestion={handleNextQuestion}
+                handleAnswerChange={handleAnswerChange}
+                handleSubmitInterview={handleSubmitInterview}
+              />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
-      )}
+
+        <Route
+          path="/result"
+          element={
+            selectedRole ? (
+              <ResultPage
+                selectedRole={selectedRole}
+                selectedQuestions={selectedQuestions}
+                answers={answers}
+                totalQuestions={totalQuestions}
+                answeredCount={answeredCount}
+                unansweredCount={unansweredCount}
+                completionPercentage={completionPercentage}
+                handleRetakeInterview={handleRetakeInterview}
+                handleBackToRoles={handleBackToRoles}
+              />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+      </Routes>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 
