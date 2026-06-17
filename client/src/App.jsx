@@ -1,6 +1,13 @@
 import { useState } from "react";
 import "./App.css";
 
+import Navbar from "./components/navbar";
+import Hero from "./components/hero";
+import Features from "./components/features";
+import RoleSelection from "./components/roleselection";
+import InterviewScreen from "./components/interviewscreen";
+import ResultPage from "./components/resultpage";
+
 function App() {
   const [selectedRole, setSelectedRole] = useState("");
   const [interviewStarted, setInterviewStarted] = useState(false);
@@ -125,224 +132,71 @@ function App() {
     setInterviewSubmitted(true);
   };
 
+  const handleRetakeInterview = () => {
+    setCurrentQuestionIndex(0);
+    setAnswers({});
+    setInterviewSubmitted(false);
+  };
+
   const selectedQuestions = selectedRole ? questions[selectedRole] : [];
   const currentQuestion = selectedQuestions[currentQuestionIndex];
   const currentAnswer = answers[currentQuestionIndex] || "";
+
   const answeredCount = Object.values(answers).filter(
     (answer) => answer.trim() !== ""
   ).length;
 
+  const totalQuestions = selectedQuestions.length;
+  const unansweredCount = totalQuestions - answeredCount;
+  const completionPercentage =
+    totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+
   return (
     <div className="app">
-      <nav className="navbar">
-        <h2 className="logo">InterviewAce AI</h2>
+      <Navbar />
 
-        <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#roles">Roles</a>
-          <button className="nav-btn">Dashboard</button>
-        </div>
-      </nav>
-
-      {!interviewStarted ? (
+      {!interviewStarted && (
         <>
-          <section className="hero">
-            <div className="hero-content">
-              <p className="badge">AI Mock Interview Platform</p>
+          <Hero />
+          <Features />
 
-              <h1>
-                Practice interviews with <span>AI-powered feedback</span>
-              </h1>
-
-              <p className="hero-text">
-                Select your target role, answer real interview questions, and
-                get instant AI-based scores, feedback, and improvement tips to
-                prepare better for placements.
-              </p>
-
-              <div className="hero-buttons">
-                <a href="#roles" className="primary-btn">
-                  Start Interview
-                </a>
-                <button className="secondary-btn">View Progress</button>
-              </div>
-            </div>
-
-            <div className="hero-card">
-              <h3>Mock Interview Score</h3>
-
-              <div className="score-circle">85%</div>
-
-              <p>Strong answer structure</p>
-              <p>Improve confidence and examples</p>
-              <p>Good technical clarity</p>
-            </div>
-          </section>
-
-          <section className="features" id="features">
-            <h2>What InterviewAce AI Will Do</h2>
-
-            <div className="feature-grid">
-              <div className="feature-card">
-                <h3>Role-Based Questions</h3>
-                <p>
-                  Practice for SDE, Frontend Developer, Backend Developer, Data
-                  Analyst, and HR interview rounds.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <h3>AI Feedback</h3>
-                <p>
-                  Get answer scores, strengths, weaknesses, improved answers,
-                  and personalized tips after every response.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <h3>Voice Practice</h3>
-                <p>
-                  Record your answers, convert speech to text, and evaluate your
-                  spoken interview responses.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <h3>Progress Tracking</h3>
-                <p>
-                  Track previous mock interviews, average scores, weak topics,
-                  and improvement over time.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section className="roles" id="roles">
-            <h2>Choose Your Interview Role</h2>
-
-            <p className="roles-subtitle">
-              Select one role to begin your mock interview preparation.
-            </p>
-
-            <div className="role-grid">
-              {roles.map((role) => (
-                <div
-                  key={role.name}
-                  className={
-                    selectedRole === role.name
-                      ? "role-card selected"
-                      : "role-card"
-                  }
-                  onClick={() => handleRoleSelect(role.name)}
-                >
-                  <h3>{role.name}</h3>
-                  <p>{role.description}</p>
-                </div>
-              ))}
-            </div>
-
-            {selectedRole && (
-              <div className="selected-role-box">
-                <p>
-                  Selected Role: <span>{selectedRole}</span>
-                </p>
-
-                <button className="primary-btn" onClick={handleStartInterview}>
-                  Start {selectedRole} Interview
-                </button>
-              </div>
-            )}
-          </section>
+          <RoleSelection
+            roles={roles}
+            selectedRole={selectedRole}
+            handleRoleSelect={handleRoleSelect}
+            handleStartInterview={handleStartInterview}
+          />
         </>
-      ) : (
-        <section className="interview-section">
-          <div className="interview-card">
-            <button className="back-btn" onClick={handleBackToRoles}>
-              ← Back to Roles
-            </button>
+      )}
 
-            <p className="badge">{selectedRole} Mock Interview</p>
+      {interviewStarted && !interviewSubmitted && (
+        <InterviewScreen
+          selectedRole={selectedRole}
+          selectedQuestions={selectedQuestions}
+          currentQuestionIndex={currentQuestionIndex}
+          currentQuestion={currentQuestion}
+          currentAnswer={currentAnswer}
+          answeredCount={answeredCount}
+          handleBackToRoles={handleBackToRoles}
+          handlePreviousQuestion={handlePreviousQuestion}
+          handleNextQuestion={handleNextQuestion}
+          handleAnswerChange={handleAnswerChange}
+          handleSubmitInterview={handleSubmitInterview}
+        />
+      )}
 
-            <h2>
-              Question {currentQuestionIndex + 1} of {selectedQuestions.length}
-            </h2>
-
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${
-                    ((currentQuestionIndex + 1) / selectedQuestions.length) *
-                    100
-                  }%`,
-                }}
-              ></div>
-            </div>
-
-            <p className="answered-count">
-              Answered {answeredCount} of {selectedQuestions.length} questions
-            </p>
-
-            {!interviewSubmitted ? (
-              <>
-                <div className="question-box">
-                  <p>{currentQuestion}</p>
-                </div>
-
-                <div className="answer-box">
-                  <label>Your Answer</label>
-
-                  <textarea
-                    placeholder="Type your answer here..."
-                    value={currentAnswer}
-                    onChange={handleAnswerChange}
-                  ></textarea>
-                </div>
-
-                <div className="question-actions">
-                  <button
-                    className="secondary-btn"
-                    onClick={handlePreviousQuestion}
-                    disabled={currentQuestionIndex === 0}
-                  >
-                    Previous
-                  </button>
-
-                  {currentQuestionIndex === selectedQuestions.length - 1 ? (
-                    <button
-                      className="primary-btn"
-                      onClick={handleSubmitInterview}
-                    >
-                      Submit Interview
-                    </button>
-                  ) : (
-                    <button className="primary-btn" onClick={handleNextQuestion}>
-                      Next
-                    </button>
-                  )}
-                </div>
-              </>
-            ) : (
-              <div className="submission-box">
-                <h2>Interview Submitted Successfully!</h2>
-
-                <p>
-                  You answered {answeredCount} out of{" "}
-                  {selectedQuestions.length} questions.
-                </p>
-
-                <p>
-                  In the next level, we will create a result page and show your
-                  answers question-wise.
-                </p>
-
-                <button className="primary-btn" onClick={handleBackToRoles}>
-                  Practice Another Role
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
+      {interviewStarted && interviewSubmitted && (
+        <ResultPage
+          selectedRole={selectedRole}
+          selectedQuestions={selectedQuestions}
+          answers={answers}
+          totalQuestions={totalQuestions}
+          answeredCount={answeredCount}
+          unansweredCount={unansweredCount}
+          completionPercentage={completionPercentage}
+          handleRetakeInterview={handleRetakeInterview}
+          handleBackToRoles={handleBackToRoles}
+        />
       )}
     </div>
   );
