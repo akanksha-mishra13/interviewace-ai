@@ -46,6 +46,62 @@ function AppContent() {
 
   const completionPercentage =
     totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+    const getAnswerFeedback = (answer) => {
+  const cleanAnswer = answer.trim();
+
+  if (cleanAnswer === "") {
+    return {
+      score: 0,
+      feedback: "No answer provided.",
+      suggestion: "Try to answer the question with at least 3-4 meaningful lines.",
+    };
+  }
+
+  const wordCount = cleanAnswer.split(/\s+/).length;
+
+  if (wordCount < 15) {
+    return {
+      score: 40,
+      feedback: "Your answer is too short.",
+      suggestion: "Add explanation, examples, and key points to make it stronger.",
+    };
+  }
+
+  if (wordCount < 35) {
+    return {
+      score: 70,
+      feedback: "Good answer, but it can be improved.",
+      suggestion: "Add one real example or project-related explanation.",
+    };
+  }
+
+  return {
+    score: 90,
+    feedback: "Strong answer with good detail.",
+    suggestion: "Keep your answer structured and confident.",
+  };
+};
+
+const answerFeedback = selectedQuestions.map((question, index) => {
+  const answer = answers[index] || "";
+  const result = getAnswerFeedback(answer);
+
+  return {
+    question,
+    answer,
+    score: result.score,
+    feedback: result.feedback,
+    suggestion: result.suggestion,
+  };
+});
+
+const overallScore =
+  totalQuestions > 0
+    ? Math.round(
+        answerFeedback.reduce((sum, item) => sum + item.score, 0) /
+          totalQuestions
+      )
+    : 0;
 
   const handleRoleSelect = (roleName) => {
     setSelectedRole(roleName);
@@ -94,14 +150,15 @@ function AppContent() {
 
   const handleSubmitInterview = () => {
     const newInterview = {
-      id: Date.now(),
-      role: selectedRole,
-      totalQuestions: totalQuestions,
-      answeredCount: answeredCount,
-      unansweredCount: unansweredCount,
-      completionPercentage: completionPercentage,
-      date: new Date().toLocaleString(),
-    };
+  id: Date.now(),
+  role: selectedRole,
+  totalQuestions: totalQuestions,
+  answeredCount: answeredCount,
+  unansweredCount: unansweredCount,
+  completionPercentage: completionPercentage,
+  overallScore: overallScore,
+  date: new Date().toLocaleString(),
+};
 
     const updatedHistory = [newInterview, ...interviewHistory];
 
@@ -180,6 +237,8 @@ function AppContent() {
                 answeredCount={answeredCount}
                 unansweredCount={unansweredCount}
                 completionPercentage={completionPercentage}
+                answerFeedback={answerFeedback}
+                overallScore={overallScore}
                 handleRetakeInterview={handleRetakeInterview}
                 handleBackToRoles={handleBackToRoles}
               />
