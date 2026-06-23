@@ -167,19 +167,19 @@ http://localhost:5173
 
 ### Home Page
 
-Add screenshot here.
+![Home Page](screenshots/home.png)
 
 ### Interview Page
 
-Add screenshot here.
+![Interview Page](screenshots/interview.png)
 
 ### Result Page
 
-Add screenshot here.
+![Result Page](screenshots/result.png)
 
 ### Dashboard Page
 
-Add screenshot here.
+![Dashboard Page](screenshots/dashboard.png)
 
 ## Future Improvements
 
