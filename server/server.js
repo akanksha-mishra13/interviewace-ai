@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+import interviewRoutes from "./routes/interviewRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.get("/api/health", (req, res) => {
     message: "Backend API is working",
   });
 });
+
+app.use("/api/interviews", interviewRoutes);
 
 const PORT = process.env.PORT || 5001;
 
