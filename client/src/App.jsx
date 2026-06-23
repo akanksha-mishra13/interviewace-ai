@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -21,22 +21,51 @@ import Footer from "./components/footer";
 import { roles } from "./data/roles";
 import { questions } from "./data/questions";
 
+import {
+  saveInterview,
+  getInterviewHistory,
+  clearInterviewHistory,
+} from "./api/interviewApi";
+
 function AppContent() {
   const [selectedRole, setSelectedRole] = useState("");
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-
-  const [interviewHistory, setInterviewHistory] = useState(() => {
-    const savedHistory = localStorage.getItem("interviewHistory");
-    return savedHistory ? JSON.parse(savedHistory) : [];
-  });
+  const [interviewHistory, setInterviewHistory] = useState([]);
 
   const navigate = useNavigate();
 
   const selectedQuestions = selectedRole ? questions[selectedRole] || [] : [];
   const currentQuestion = selectedQuestions[currentQuestionIndex];
   const currentAnswer = answers[currentQuestionIndex] || "";
+
+  const formatInterview = (interview) => {
+    return {
+      ...interview,
+      id: interview._id || interview.id,
+      date: interview.createdAt
+        ? new Date(interview.createdAt).toLocaleString()
+        : interview.date,
+    };
+  };
+
+  const fetchHistoryFromBackend = async () => {
+    try {
+      const response = await getInterviewHistory();
+
+      if (response.success) {
+        const formattedHistory = response.data.map(formatInterview);
+        setInterviewHistory(formattedHistory);
+      }
+    } catch (error) {
+      console.log("Failed to fetch interview history:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistoryFromBackend();
+  }, []);
 
   const currentWordCount =
     currentAnswer.trim() === "" ? 0 : currentAnswer.trim().split(/\s+/).length;
@@ -157,24 +186,31 @@ function AppContent() {
     navigate("/");
   };
 
-  const handleSubmitInterview = () => {
+  const handleSubmitInterview = async () => {
     const newInterview = {
-      id: Date.now(),
       role: selectedRole,
       totalQuestions: totalQuestions,
       answeredCount: answeredCount,
       unansweredCount: unansweredCount,
       completionPercentage: completionPercentage,
       overallScore: overallScore,
-      date: new Date().toLocaleString(),
+      answerFeedback: answerFeedback,
     };
 
-    const updatedHistory = [newInterview, ...interviewHistory];
+    try {
+      const response = await saveInterview(newInterview);
 
-    setInterviewHistory(updatedHistory);
-    localStorage.setItem("interviewHistory", JSON.stringify(updatedHistory));
-
-    navigate("/result");
+      if (response.success) {
+        const savedInterview = formatInterview(response.data);
+        setInterviewHistory([savedInterview, ...interviewHistory]);
+        navigate("/result");
+      } else {
+        alert("Failed to save interview. Please try again.");
+      }
+    } catch (error) {
+      console.log("Save interview error:", error);
+      alert("Backend is not running. Please start backend server.");
+    }
   };
 
   const handleRetakeInterview = () => {
@@ -184,9 +220,17 @@ function AppContent() {
     navigate("/interview");
   };
 
-  const handleClearHistory = () => {
-    setInterviewHistory([]);
-    localStorage.removeItem("interviewHistory");
+  const handleClearHistory = async () => {
+    try {
+      const response = await clearInterviewHistory();
+
+      if (response.success) {
+        setInterviewHistory([]);
+      }
+    } catch (error) {
+      console.log("Clear history error:", error);
+      alert("Failed to clear history. Please check backend.");
+    }
   };
 
   return (
