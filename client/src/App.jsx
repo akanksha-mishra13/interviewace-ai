@@ -210,7 +210,7 @@ function AppContent() {
   try {
     const aiResponse = await generateAIFeedback(selectedRole, answersForAI);
 
-    console.log("FULL AI RESPONSE:", JSON.stringify(aiResponse, null, 2));
+    
 
     if (!aiResponse.success) {
       alert("Gemini AI failed. Check backend terminal.");
