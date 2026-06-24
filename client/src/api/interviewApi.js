@@ -25,3 +25,18 @@ export const clearInterviewHistory = async () => {
 
   return response.json();
 };
+
+export const generateAIFeedback = async (role, answers) => {
+  const response = await fetch(`${API_BASE_URL}/ai/feedback`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      role,
+      answers,
+    }),
+  });
+
+  return response.json();
+};

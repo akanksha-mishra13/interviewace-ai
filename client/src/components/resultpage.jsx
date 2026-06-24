@@ -1,99 +1,165 @@
 function ResultPage({
-  selectedRole,
-  totalQuestions,
-  answeredCount,
-  unansweredCount,
-  completionPercentage,
-  answerFeedback = [],
-  overallScore = 0,
-  handleRetakeInterview,
-  handleBackToRoles,
+selectedRole,
+selectedQuestions = [],
+answers = {},
+totalQuestions = 0,
+answeredCount = 0,
+unansweredCount = 0,
+completionPercentage = 0,
+answerFeedback = [],
+overallScore = 0,
+handleRetakeInterview,
+handleBackToRoles,
 }) {
-  return (
-    <section className="interview-section">
-      <div className="interview-card">
-        <div className="result-box">
-          <h2>Interview Result</h2>
+const safeFeedbackList =
+Array.isArray(answerFeedback) && answerFeedback.length > 0
+? answerFeedback
+: selectedQuestions.map((question, index) => {
+return {
+question: question,
+answer: answers[index] || "",
+score: 0,
+feedback: "Feedback not available.",
+suggestion: "Please submit the interview again.",
+};
+});
 
-          <p className="result-role">
-            Role: <span>{selectedRole}</span>
-          </p>
+const getScoreMessage = (score) => {
+const numericScore = Number(score) || 0;
 
-          <div className="overall-score-box">
-            <h3>{overallScore}%</h3>
-            <p>Overall Interview Score</p>
-          </div>
 
-          <div className="result-stats">
-            <div className="result-card">
-              <h3>{totalQuestions}</h3>
-              <p>Total Questions</p>
-            </div>
+if (numericScore >= 80) {
+  return "Excellent";
+}
 
-            <div className="result-card">
-              <h3>{answeredCount}</h3>
-              <p>Answered</p>
-            </div>
+if (numericScore >= 60) {
+  return "Good";
+}
 
-            <div className="result-card">
-              <h3>{unansweredCount}</h3>
-              <p>Unanswered</p>
-            </div>
+if (numericScore >= 40) {
+  return "Needs Improvement";
+}
 
-            <div className="result-card">
-              <h3>{completionPercentage}%</h3>
-              <p>Completion</p>
-            </div>
-          </div>
+return "Poor";
 
-          <div className="answer-summary">
-            <h3>AI-Style Feedback</h3>
 
-            {answerFeedback.length === 0 ? (
-              <p>No feedback available.</p>
-            ) : (
-              answerFeedback.map((item, index) => (
-                <div className="summary-card" key={index}>
-                  <h4>
-                    Question {index + 1}: {item.question}
-                  </h4>
+};
 
-                  <p>
-                    <strong>Your Answer:</strong>{" "}
-                    {item.answer && item.answer.trim() !== ""
-                      ? item.answer
-                      : "No answer provided."}
-                  </p>
+const getScoreClass = (score) => {
+const numericScore = Number(score) || 0;
 
-                  <p>
-                    <strong>Score:</strong> {item.score}%
-                  </p>
 
-                  <p>
-                    <strong>Feedback:</strong> {item.feedback}
-                  </p>
+if (numericScore >= 80) {
+  return "score-excellent";
+}
 
-                  <p>
-                    <strong>Suggestion:</strong> {item.suggestion}
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
+if (numericScore >= 60) {
+  return "score-good";
+}
 
-          <div className="result-actions">
-            <button className="secondary-btn" onClick={handleRetakeInterview}>
-              Retake Same Role
-            </button>
+if (numericScore >= 40) {
+  return "score-average";
+}
 
-            <button className="primary-btn" onClick={handleBackToRoles}>
-              Practice Another Role
-            </button>
-          </div>
-        </div>
+return "score-poor";
+
+
+};
+
+return ( <section className="result-page"> <div className="result-container"> <div className="result-header"> <p className="section-label">Interview Result</p> <h1>Your {selectedRole} Interview Report</h1> <p>
+Here is your performance summary with feedback for every answer. </p> </div>
+
+```
+    <div className="result-summary">
+      <div className="summary-card main-score-card">
+        <p>Overall Score</p>
+        <h2 className={getScoreClass(overallScore)}>
+          {Number(overallScore) || 0}%
+        </h2>
+        <span>{getScoreMessage(overallScore)}</span>
       </div>
-    </section>
-  );
+
+      <div className="summary-card">
+        <p>Total Questions</p>
+        <h2>{totalQuestions}</h2>
+      </div>
+
+      <div className="summary-card">
+        <p>Answered</p>
+        <h2>{answeredCount}</h2>
+      </div>
+
+      <div className="summary-card">
+        <p>Unanswered</p>
+        <h2>{unansweredCount}</h2>
+      </div>
+
+      <div className="summary-card">
+        <p>Completion</p>
+        <h2>{completionPercentage}%</h2>
+      </div>
+    </div>
+
+    <div className="feedback-section">
+      <h2>AI Feedback</h2>
+
+      {safeFeedbackList.map((item, index) => {
+        const questionText = item.question || selectedQuestions[index] || "";
+        const answerText = String(item.answer || "");
+        const score = Number(item.score) || 0;
+        const feedbackText = item.feedback || "Feedback not available.";
+        const suggestionText =
+          item.suggestion || "Try to give a more complete answer.";
+
+        return (
+          <div className="feedback-card" key={index}>
+            <div className="feedback-top">
+              <h3>
+                Q{index + 1}. {questionText}
+              </h3>
+
+              <span className={`question-score ${getScoreClass(score)}`}>
+                {score}/100
+              </span>
+            </div>
+
+            <div className="answer-box">
+              <h4>Your Answer</h4>
+              <p>
+                {answerText.trim() !== ""
+                  ? answerText
+                  : "No answer provided."}
+              </p>
+            </div>
+
+            <div className="ai-feedback-box">
+              <h4>Feedback</h4>
+              <p>{feedbackText}</p>
+            </div>
+
+            <div className="suggestion-box">
+              <h4>Suggestion</h4>
+              <p>{suggestionText}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <div className="result-actions">
+      <button className="secondary-btn" onClick={handleBackToRoles}>
+        Back to Roles
+      </button>
+
+      <button className="primary-btn" onClick={handleRetakeInterview}>
+        Retake Interview
+      </button>
+    </div>
+  </div>
+</section>
+
+
+);
 }
 
 export default ResultPage;

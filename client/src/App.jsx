@@ -25,6 +25,7 @@ import {
   saveInterview,
   getInterviewHistory,
   clearInterviewHistory,
+  generateAIFeedback,
 } from "./api/interviewApi";
 
 function AppContent() {
@@ -33,6 +34,8 @@ function AppContent() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [interviewHistory, setInterviewHistory] = useState([]);
+  const [finalAnswerFeedback, setFinalAnswerFeedback] = useState([]);
+  const [finalOverallScore, setFinalOverallScore] = useState(null);
 
   const navigate = useNavigate();
 
@@ -141,18 +144,29 @@ function AppContent() {
         )
       : 0;
 
+  const resultAnswerFeedback =
+    finalAnswerFeedback.length > 0 ? finalAnswerFeedback : answerFeedback;
+
+  const resultOverallScore =
+    finalOverallScore !== null ? finalOverallScore : overallScore;
+
+  const resetInterviewState = () => {
+    setCurrentQuestionIndex(0);
+    setAnswers({});
+    setFinalAnswerFeedback([]);
+    setFinalOverallScore(null);
+  };
+
   const handleRoleSelect = (roleName) => {
     setSelectedRole(roleName);
     setInterviewStarted(false);
-    setCurrentQuestionIndex(0);
-    setAnswers({});
+    resetInterviewState();
   };
 
   const handleStartInterview = () => {
     if (selectedRole) {
       setInterviewStarted(true);
-      setCurrentQuestionIndex(0);
-      setAnswers({});
+      resetInterviewState();
       navigate("/interview");
     }
   };
@@ -181,42 +195,71 @@ function AppContent() {
   const handleBackToRoles = () => {
     setSelectedRole("");
     setInterviewStarted(false);
-    setCurrentQuestionIndex(0);
-    setAnswers({});
+    resetInterviewState();
     navigate("/");
   };
 
   const handleSubmitInterview = async () => {
+  const answersForAI = selectedQuestions.map((question, index) => {
+    return {
+      question,
+      answer: answers[index] || "",
+    };
+  });
+
+  try {
+    const aiResponse = await generateAIFeedback(selectedRole, answersForAI);
+
+    console.log("FULL AI RESPONSE:", JSON.stringify(aiResponse, null, 2));
+
+    if (!aiResponse.success) {
+      alert("Gemini AI failed. Check backend terminal.");
+      return;
+    }
+
+    if (
+      !aiResponse.data ||
+      !Array.isArray(aiResponse.data.answerFeedback) ||
+      aiResponse.data.answerFeedback.length === 0
+    ) {
+      alert("Gemini response is missing answerFeedback.");
+      return;
+    }
+
+    const aiAnswerFeedback = aiResponse.data.answerFeedback;
+    const aiOverallScore = aiResponse.data.overallScore;
+
     const newInterview = {
       role: selectedRole,
-      totalQuestions: totalQuestions,
-      answeredCount: answeredCount,
-      unansweredCount: unansweredCount,
-      completionPercentage: completionPercentage,
-      overallScore: overallScore,
-      answerFeedback: answerFeedback,
+      totalQuestions,
+      answeredCount,
+      unansweredCount,
+      completionPercentage,
+      overallScore: aiOverallScore,
+      answerFeedback: aiAnswerFeedback,
     };
 
-    try {
-      const response = await saveInterview(newInterview);
+    const response = await saveInterview(newInterview);
 
-      if (response.success) {
-        const savedInterview = formatInterview(response.data);
-        setInterviewHistory([savedInterview, ...interviewHistory]);
-        navigate("/result");
-      } else {
-        alert("Failed to save interview. Please try again.");
-      }
-    } catch (error) {
-      console.log("Save interview error:", error);
-      alert("Backend is not running. Please start backend server.");
+    if (response.success) {
+      const savedInterview = formatInterview(response.data);
+
+      setFinalAnswerFeedback(aiAnswerFeedback);
+      setFinalOverallScore(aiOverallScore);
+      setInterviewHistory([savedInterview, ...interviewHistory]);
+
+      navigate("/result");
+    } else {
+      alert("Failed to save interview. Please try again.");
     }
-  };
-
+  } catch (error) {
+    console.log("AI feedback error:", error);
+    alert("AI feedback failed. Please make sure backend server is running.");
+  }
+};
   const handleRetakeInterview = () => {
     setInterviewStarted(true);
-    setCurrentQuestionIndex(0);
-    setAnswers({});
+    resetInterviewState();
     navigate("/interview");
   };
 
@@ -292,8 +335,8 @@ function AppContent() {
                 answeredCount={answeredCount}
                 unansweredCount={unansweredCount}
                 completionPercentage={completionPercentage}
-                answerFeedback={answerFeedback}
-                overallScore={overallScore}
+                answerFeedback={resultAnswerFeedback}
+                overallScore={resultOverallScore}
                 handleRetakeInterview={handleRetakeInterview}
                 handleBackToRoles={handleBackToRoles}
               />

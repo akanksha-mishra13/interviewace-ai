@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/interviews", interviewRoutes);
+app.use("/api/ai", aiRoutes);
 
 const PORT = process.env.PORT || 5001;
 
