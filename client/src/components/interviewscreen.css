@@ -1,0 +1,146 @@
+.interview-section{
+padding:90px 8%;
+display:flex;
+justify-content:center;
+}
+
+.interview-card{
+width:100%;
+max-width:950px;
+background:var(--glass-dark);
+border:1px solid var(--border);
+border-radius:28px;
+padding:40px;
+box-shadow:var(--shadow);
+}
+
+.back-btn{
+margin-bottom:25px;
+background:none;
+border:none;
+color:var(--sky);
+cursor:pointer;
+font-size:15px;
+font-weight:600;
+}
+
+.interview-card h2{
+font-size:36px;
+color:white;
+margin:18px 0;
+}
+
+.progress-bar{
+height:10px;
+background:#1a2435;
+border-radius:999px;
+overflow:hidden;
+margin:25px 0 15px;
+}
+
+.progress-fill{
+height:100%;
+background:linear-gradient(90deg,#8FAFC4,#C8D9E6);
+border-radius:999px;
+transition:.35s;
+}
+
+.progress-info{
+display:flex;
+justify-content:space-between;
+color:var(--text-soft);
+margin-bottom:30px;
+}
+
+.question-box{
+padding:28px;
+background:rgba(255,255,255,.03);
+border:1px solid rgba(255,255,255,.05);
+border-radius:22px;
+margin-bottom:30px;
+}
+
+.question-box h3{
+color:var(--sky);
+margin-bottom:18px;
+}
+
+.question-box p{
+font-size:18px;
+line-height:1.8;
+color:white;
+}
+
+.answer-box label{
+display:block;
+font-size:18px;
+font-weight:700;
+margin-bottom:15px;
+color:white;
+}
+
+.answer-box textarea{
+width:100%;
+min-height:220px;
+padding:20px;
+background:#101827;
+border:1px solid rgba(255,255,255,.08);
+border-radius:18px;
+color:white;
+font-size:16px;
+resize:vertical;
+outline:none;
+transition:.3s;
+}
+
+.answer-box textarea:focus{
+border-color:var(--sky);
+}
+
+.answer-helper{
+margin-top:18px;
+}
+
+.answer-helper p{
+margin-bottom:10px;
+}
+
+.warning-text{
+color:#FBBF24;
+}
+
+.success-text{
+color:#34D399;
+}
+
+.question-actions{
+display:flex;
+justify-content:space-between;
+margin-top:40px;
+}
+
+@media(max-width:700px){
+
+.interview-section{
+padding:70px 6%;
+}
+
+.interview-card{
+padding:28px;
+}
+
+.interview-card h2{
+font-size:28px;
+}
+
+.progress-info{
+flex-direction:column;
+gap:10px;
+}
+
+.question-actions{
+flex-direction:column;
+gap:15px;
+}
+
+}

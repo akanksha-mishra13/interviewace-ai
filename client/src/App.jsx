@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
   useNavigate,
-} from "react-router";
+} from "react-router-dom";
 
 import "./App.css";
 
@@ -17,6 +17,10 @@ import InterviewScreen from "./components/interviewscreen";
 import ResultPage from "./components/resultpage";
 import Dashboard from "./components/dashboard";
 import Footer from "./components/footer";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useAuth } from "./context/AuthContext";
 
 import { roles } from "./data/roles";
 import { questions } from "./data/questions";
@@ -38,7 +42,7 @@ function AppContent() {
   const [finalOverallScore, setFinalOverallScore] = useState(null);
 
   const navigate = useNavigate();
-
+  const { user } = useAuth();
   const selectedQuestions = selectedRole ? questions[selectedRole] || [] : [];
   const currentQuestion = selectedQuestions[currentQuestionIndex];
   const currentAnswer = answers[currentQuestionIndex] || "";
@@ -278,88 +282,110 @@ function AppContent() {
 
   return (
     <div className="app">
-      <Navbar />
-
+      <Navbar/>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Hero />
-              <Features />
 
-              <RoleSelection
-                roles={roles}
-                selectedRole={selectedRole}
-                handleRoleSelect={handleRoleSelect}
-                handleStartInterview={handleStartInterview}
-              />
-            </>
-          }
-        />
+  <Route
+    path="/"
+    element={
+      <>
+        <Hero />
+        <Features />
 
-        <Route
-          path="/interview"
-          element={
-            selectedRole && interviewStarted ? (
-              <InterviewScreen
-                selectedRole={selectedRole}
-                selectedQuestions={selectedQuestions}
-                currentQuestionIndex={currentQuestionIndex}
-                currentQuestion={currentQuestion}
-                currentAnswer={currentAnswer}
-                currentWordCount={currentWordCount}
-                canSubmitInterview={canSubmitInterview}
-                answeredCount={answeredCount}
-                handleBackToRoles={handleBackToRoles}
-                handlePreviousQuestion={handlePreviousQuestion}
-                handleNextQuestion={handleNextQuestion}
-                handleAnswerChange={handleAnswerChange}
-                handleSubmitInterview={handleSubmitInterview}
-              />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+        <RoleSelection
+          roles={roles}
+          selectedRole={selectedRole}
+          handleRoleSelect={handleRoleSelect}
+          handleStartInterview={handleStartInterview}
         />
+      </>
+    }
+  />
 
-        <Route
-          path="/result"
-          element={
-            selectedRole ? (
-              <ResultPage
-                selectedRole={selectedRole}
-                selectedQuestions={selectedQuestions}
-                answers={answers}
-                totalQuestions={totalQuestions}
-                answeredCount={answeredCount}
-                unansweredCount={unansweredCount}
-                completionPercentage={completionPercentage}
-                answerFeedback={resultAnswerFeedback}
-                overallScore={resultOverallScore}
-                handleRetakeInterview={handleRetakeInterview}
-                handleBackToRoles={handleBackToRoles}
-              />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
+  <Route
+    path="/login"
+    element={
+      user ? <Navigate to="/" replace /> : <Login />
+    }
+  />
 
-        <Route
-          path="/dashboard"
-          element={
-            <Dashboard
-              roles={roles}
-              selectedRole={selectedRole}
-              totalQuestions={totalQuestions}
-              answeredCount={answeredCount}
-              interviewHistory={interviewHistory}
-              handleClearHistory={handleClearHistory}
-            />
-          }
+  <Route
+    path="/register"
+    element={
+      user ? <Navigate to="/" replace /> : <Register />
+    }
+  />
+
+  <Route
+    path="/interview"
+    element={
+      selectedRole && interviewStarted ? (
+        <ProtectedRoute>
+          <InterviewScreen
+            selectedRole={selectedRole}
+            selectedQuestions={selectedQuestions}
+            currentQuestionIndex={currentQuestionIndex}
+            currentQuestion={currentQuestion}
+            currentAnswer={currentAnswer}
+            currentWordCount={currentWordCount}
+            canSubmitInterview={canSubmitInterview}
+            answeredCount={answeredCount}
+            handleBackToRoles={handleBackToRoles}
+            handlePreviousQuestion={handlePreviousQuestion}
+            handleNextQuestion={handleNextQuestion}
+            handleAnswerChange={handleAnswerChange}
+            handleSubmitInterview={handleSubmitInterview}
+          />
+        </ProtectedRoute>
+      ) : (
+        <Navigate to="/" />
+      )
+    }
+  />
+
+  <Route
+    path="/result"
+    element={
+      selectedRole ? (
+        <ProtectedRoute>
+          <ResultPage
+            selectedRole={selectedRole}
+            selectedQuestions={selectedQuestions}
+            answers={answers}
+            totalQuestions={totalQuestions}
+            answeredCount={answeredCount}
+            unansweredCount={unansweredCount}
+            completionPercentage={completionPercentage}
+            answerFeedback={resultAnswerFeedback}
+            overallScore={resultOverallScore}
+            handleRetakeInterview={handleRetakeInterview}
+            handleBackToRoles={handleBackToRoles}
+          />
+        </ProtectedRoute>
+      ) : (
+        <Navigate to="/" />
+      )
+    }
+  />
+
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute>
+        <Dashboard
+          roles={roles}
+          selectedRole={selectedRole}
+          totalQuestions={totalQuestions}
+          answeredCount={answeredCount}
+          interviewHistory={interviewHistory}
+          handleClearHistory={handleClearHistory}
         />
-      </Routes>
+      </ProtectedRoute>
+    }
+  />
+
+</Routes>
+      
 
       <Footer />
     </div>

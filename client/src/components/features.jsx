@@ -1,41 +1,70 @@
+import "./features.css";
+
 function Features() {
   return (
     <section className="features" id="features">
-      <h2>What InterviewAce AI Will Do</h2>
+
+      <div className="section-heading">
+        <p className="badge">Why Choose InterviewAce AI</p>
+
+        <h2>Everything You Need to Ace Your Next Interview</h2>
+
+        <p className="section-subtitle">
+          Experience realistic AI-powered mock interviews with detailed
+          feedback, performance tracking, and role-specific preparation in one
+          platform.
+        </p>
+      </div>
 
       <div className="feature-grid">
+
         <div className="feature-card">
-          <h3>Role-Based Questions</h3>
+          <div className="feature-number">01</div>
+
+          <h3>Role-Specific Interviews</h3>
+
           <p>
-            Practice for SDE, Frontend Developer, Backend Developer, Data
-            Analyst, and HR interview rounds.
+            Practice curated interview questions for Software Engineer,
+            Frontend, Backend, Full Stack, Data Analyst, HR, and many more
+            career paths.
           </p>
         </div>
 
         <div className="feature-card">
-          <h3>AI Feedback</h3>
+          <div className="feature-number">02</div>
+
+          <h3>AI Performance Review</h3>
+
           <p>
-            Get answer scores, strengths, weaknesses, improved answers, and
-            personalized tips after every response.
+            Receive intelligent feedback on answer quality, communication,
+            technical depth, confidence level, and suggestions for improvement.
           </p>
         </div>
 
         <div className="feature-card">
-          <h3>Voice Practice</h3>
+          <div className="feature-number">03</div>
+
+          <h3>Voice Interview Practice</h3>
+
           <p>
-            Record your answers, convert speech to text, and evaluate your
-            spoken interview responses.
+            Answer naturally using your voice. Speech is converted into text and
+            evaluated to simulate a real interview experience.
           </p>
         </div>
 
         <div className="feature-card">
-          <h3>Progress Tracking</h3>
+          <div className="feature-number">04</div>
+
+          <h3>Progress Analytics</h3>
+
           <p>
-            Track previous mock interviews, average scores, weak topics, and
-            improvement over time.
+            Monitor interview history, identify weak areas, compare previous
+            scores, and visualize your preparation journey over time.
           </p>
         </div>
+
       </div>
+
     </section>
   );
 }

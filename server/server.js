@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
-
+import authRoutes from "./routes/authroutes.js";
 dotenv.config();
 
 connectDB();
@@ -27,6 +27,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/interviews", interviewRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5001;
 

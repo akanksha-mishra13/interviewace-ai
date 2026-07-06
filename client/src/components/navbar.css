@@ -1,0 +1,162 @@
+.navbar {
+  width: 100%;
+  padding: 18px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(11, 17, 32, 0.75);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(200, 217, 230, 0.08);
+}
+
+.logo {
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.logo span {
+  color: #C8D9E6;
+}
+
+.nav-center {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+}
+
+.nav-center a {
+  text-decoration: none;
+  color: #B7C3CF;
+  font-weight: 500;
+  transition: 0.3s;
+  position: relative;
+}
+
+.nav-center a:hover {
+  color: #ffffff;
+}
+
+.nav-center a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #C8D9E6;
+  transition: .3s;
+}
+
+.nav-center a:hover::after {
+  width: 100%;
+}
+
+.nav-right {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.login-btn {
+  text-decoration: none;
+  color: #C8D9E6;
+  padding: 11px 18px;
+  border-radius: 10px;
+  transition: .3s;
+}
+
+.login-btn:hover {
+  background: rgba(200,217,230,0.08);
+}
+
+.start-btn {
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#C8D9E6,#8FAFC4);
+  color: #0B1120;
+  font-weight: 700;
+  transition: .3s;
+  box-shadow: 0 10px 25px rgba(200,217,230,.15);
+}
+
+.start-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(200,217,230,.25);
+}
+
+/* --- NEW AUTHENTICATION STYLES --- */
+
+.user-greeting {
+  color: #C8D9E6;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.logout-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: #ef4444;
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: .3s;
+  font-size: 16px;
+  font-family: inherit;
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
+}
+
+.logout-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(239, 68, 68, 0.25);
+  background: #dc2626;
+}
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+
+@media(max-width:900px){
+
+  .nav-center{
+    display:none;
+  }
+
+  .nav-right{
+    gap:10px;
+  }
+
+  .logo{
+    font-size:24px;
+  }
+
+  .start-btn, .logout-btn {
+    padding:10px 18px;
+    font-size: 15px;
+  }
+}
+
+@media(max-width:600px){
+
+  .navbar{
+    padding:18px 5%;
+  }
+
+  .login-btn{
+    display:none;
+  }
+
+  .logo{
+    font-size:22px;
+  }
+  
+  .user-greeting {
+    display: none;
+  }
+}
