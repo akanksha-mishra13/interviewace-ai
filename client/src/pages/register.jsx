@@ -29,7 +29,10 @@ const Register = () => {
     try {
       setLoading(true);
       
-      const { data } = await axios.post("http://localhost:5001/api/auth/google", {
+      // ✅ CORRECT: Uses your environment variable
+      const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
+      
+      const { data } = await axios.post(`${API_URL}/auth/google`, {
         token: credentialResponse.credential,
       });
 
