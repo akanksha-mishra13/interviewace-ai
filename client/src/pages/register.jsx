@@ -135,8 +135,11 @@ const Register = () => {
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChange={handleChange}
+            minLength={6}
             required
           />
+          
+  
 
           <button
             className="primary-btn auth-btn"
