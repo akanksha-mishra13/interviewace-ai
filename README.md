@@ -1,197 +1,333 @@
-# InterviewAce AI
-# InterviewAce AI
+# 🚀 InterviewAce AI
 
-InterviewAce AI is a full-stack mock interview preparation platform that helps users practice role-based interview questions, submit answers, receive instant feedback, view scores, and track interview history through a dashboard.
+<div align="center">
 
-## Live Demo
+### AI-Powered Mock Interview Preparation Platform
 
-Frontend: https://interviewace-ai-gold.vercel.app
-Backend: https://interviewace-ai-backend-76df.onrender.com
+Practice role-based interviews, receive AI-generated feedback, improve your communication skills, and track your interview performance—all in one platform.
 
-## Features
+🌐 **Live Demo:** https://interviewace-ai-gold.vercel.app
 
-* Role-based interview practice
-* Multiple interview questions for selected roles
-* Answer writing interface
-* Word count and submit validation
-* AI-style feedback and scoring system
-* Overall interview score calculation
-* Interview result page
-* Dashboard with interview history
-* MongoDB-based interview history storage
-* Clear interview history feature
-* Fully deployed frontend and backend
+</div>
 
-## Tech Stack
+---
 
-### Frontend
+## 📖 About the Project
 
-* React.js
-* Vite
-* React Router
-* CSS
-* Vercel
+InterviewAce AI is a full-stack web application designed to help students and job seekers prepare for technical and HR interviews through realistic mock interview sessions.
 
-### Backend
+Users can choose an interview role, answer role-specific questions, receive AI-generated feedback using **Google Gemini AI**, view detailed performance reports, and monitor their progress through a personalized dashboard.
 
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* Render
+The platform also includes secure user authentication with email/password and Google Sign-In, ensuring every user's interview history remains private.
 
-### Database
+---
 
-* MongoDB Atlas
+## ✨ Features
 
-## Project Structure
+### 👨‍💻 Mock Interview System
+
+- Role-based interview preparation
+- Multiple interview roles
+- Dynamic interview questions
+- Answer writing interface
+- Word count validation
+- Previous & Next question navigation
+- Interview completion tracking
+
+### 🤖 AI Evaluation
+
+- Google Gemini AI Integration
+- AI-generated answer feedback
+- Question-wise evaluation
+- Improvement suggestions
+- Overall interview score
+- Personalized performance report
+
+### 🔐 Authentication
+
+- User Registration
+- Secure Login
+- Logout
+- Google Sign-In
+- JWT Authentication
+- Protected Routes
+- Persistent Login Session
+
+### 📊 Dashboard
+
+- Interview history
+- Average score
+- Best score
+- Best interview role
+- Current preparation progress
+- Clear interview history
+
+### 🎨 User Experience
+
+- Responsive UI
+- Modern interface
+- Smooth navigation
+- Mobile-friendly design
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- React.js
+- Vite
+- React Router DOM
+- CSS3
+- Axios
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- Google Gemini API
+
+## Deployment
+
+- Frontend → Vercel
+- Backend → Render
+- Database → MongoDB Atlas
+
+---
+
+# 📂 Project Structure
 
 ```text
-interviewace-ai/
-├── client/
-│   ├── src/
-│   │   ├── api/
+InterviewAce-AI
+│
+├── client
+│   ├── src
+│   │   ├── api
+│   │   │   ├── authApi.js
 │   │   │   └── interviewApi.js
-│   │   ├── components/
-│   │   │   ├── navbar.jsx
-│   │   │   ├── hero.jsx
-│   │   │   ├── features.jsx
-│   │   │   ├── roleselection.jsx
-│   │   │   ├── interviewscreen.jsx
-│   │   │   ├── resultpage.jsx
-│   │   │   ├── dashboard.jsx
-│   │   │   └── footer.jsx
-│   │   ├── data/
-│   │   │   ├── roles.js
-│   │   │   └── questions.js
+│   │   │
+│   │   ├── components
+│   │   │   ├── Navbar
+│   │   │   ├── Hero
+│   │   │   ├── Features
+│   │   │   ├── RoleSelection
+│   │   │   ├── InterviewScreen
+│   │   │   ├── ResultPage
+│   │   │   ├── Dashboard
+│   │   │   ├── Footer
+│   │   │   └── ProtectedRoute
+│   │   │
+│   │   ├── context
+│   │   │   └── AuthContext
+│   │   │
+│   │   ├── pages
+│   │   │   ├── Login
+│   │   │   └── Register
+│   │   │
+│   │   ├── data
+│   │   ├── assets
 │   │   ├── App.jsx
-│   │   └── App.css
+│   │   └── main.jsx
+│   │
 │   └── package.json
 │
-├── server/
-│   ├── config/
-│   │   └── db.js
-│   ├── controllers/
-│   │   └── interviewController.js
-│   ├── models/
-│   │   └── Interview.js
-│   ├── routes/
-│   │   └── interviewRoutes.js
+├── server
+│   ├── config
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── utils
 │   ├── server.js
 │   └── package.json
 │
 └── README.md
 ```
 
-## API Endpoints
+---
 
-| Method | Endpoint          | Description                 |
-| ------ | ----------------- | --------------------------- |
-| GET    | `/api/health`     | Check backend API status    |
-| POST   | `/api/interviews` | Save interview result       |
-| GET    | `/api/interviews` | Fetch all interview history |
-| DELETE | `/api/interviews` | Clear interview history     |
+# 🤖 AI Integration
 
-## How It Works
+InterviewAce AI uses **Google Gemini AI** to evaluate interview answers.
 
-1. User selects an interview role.
-2. The app displays questions based on the selected role.
-3. User writes answers and submits the interview.
-4. The system calculates answer-wise feedback and overall score.
-5. Interview result is saved in MongoDB.
-6. Dashboard fetches and displays interview history from the backend.
+For every submitted interview, Gemini generates:
 
-## Local Setup
+- Question-wise score
+- Personalized feedback
+- Improvement suggestions
+- Overall interview score
 
-### Clone the repository
+This helps users understand their strengths and identify areas for improvement.
+
+---
+
+# 🔐 Authentication
+
+The application includes a complete authentication system:
+
+- Email Registration
+- Email Login
+- Google Sign-In
+- JWT Authentication
+- Protected Dashboard
+- User Session Persistence
+
+---
+
+# 📡 API Endpoints
+
+## Authentication
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/auth/register` | Register User |
+| POST | `/api/auth/login` | Login User |
+| POST | `/api/auth/google` | Google Login |
+
+## Interview
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/interviews` | Fetch Interview History |
+| POST | `/api/interviews` | Save Interview |
+| DELETE | `/api/interviews` | Clear Interview History |
+
+---
+
+# ⚙️ Installation
+
+## Clone Repository
 
 ```bash
 git clone https://github.com/akanksha-mishra13/interviewace-ai.git
+
 cd interviewace-ai
 ```
 
-### Setup backend
+---
+
+## Backend Setup
 
 ```bash
 cd server
+
 npm install
 ```
 
-Create a `.env` file inside the `server` folder:
+Create `.env`
 
 ```env
 PORT=5001
+
 MONGO_URI=your_mongodb_connection_string
+
+JWT_SECRET=your_secret_key
+
+GEMINI_API_KEY=your_gemini_api_key
+
+CLIENT_URL=http://localhost:5173
 ```
 
-Run backend:
+Run Backend
 
 ```bash
 npm run dev
 ```
 
-Backend will run on:
+---
 
-```text
-http://localhost:5001
-```
-
-### Setup frontend
-
-Open another terminal:
+## Frontend Setup
 
 ```bash
 cd client
+
 npm install
 ```
 
-Create a `.env` file inside the `client` folder:
+Create `.env`
 
 ```env
 VITE_API_BASE_URL=http://localhost:5001/api
 ```
 
-Run frontend:
+Run Frontend
 
 ```bash
 npm run dev
 ```
 
-Frontend will run on:
+---
 
-```text
-http://localhost:5173
-```
+# 🌍 Deployment
 
-## Screenshots
+### Frontend
 
-### Home Page
+https://interviewace-ai-gold.vercel.app
+
+### Backend
+
+https://interviewace-ai-backend-76df.onrender.com
+
+---
+
+# 📸 Screenshots
+
+## Home Page
 
 ![Home Page](screenshots/home.png)
 
-### Interview Page
+## Interview Page
 
-![Interview Page](screenshots/interview.png)
+![Interview Page](screenshots/interview.png.png)
 
-### Result Page
+## Result Page
 
 ![Result Page](screenshots/result.png)
 
-### Dashboard Page
+## Dashboard
 
-![Dashboard Page](screenshots/dashboard.png)
+![Dashboard](screenshots/dashboard.png)
 
-## Future Improvements
+## Login
 
-* Add real AI feedback using Gemini or OpenAI API
-* Add user authentication with login and signup
-* Add personalized interview history per user
-* Add resume-based interview question generation
-* Add voice-based interview practice
-* Add admin dashboard
+![Login](screenshots/login.png)
 
-## Author
+## Register
 
-Akanksha Mishra
-B.Tech CSE Student
-GitHub: https://github.com/akanksha-mishra13
+![Register](screenshots/register.png)
+
+---
+
+# 🚀 Future Enhancements
+
+- 🎙 Voice-based Interview Practice
+- 🎥 Video Interview Mode
+- 📄 Resume Analysis
+- 💻 Coding Interview Round
+- 📊 Performance Graphs
+- 🏢 Company-specific Interview Sets
+- 🧠 Adaptive AI Question Generation
+- 🏆 Achievement Badges & Certificates
+
+---
+
+# 👩‍💻 Author
+
+**Akanksha Mishra**
+
+B.Tech Computer Science & Engineering
+
+🔗 GitHub: https://github.com/akanksha-mishra13
+
+🌐 Frontend: https://interviewace-ai-gold.vercel.app
+
+⚙️ Backend: https://interviewace-ai-backend-76df.onrender.com
+
+---
+
+## ⭐ Support
+
+If you found this project helpful, consider giving it a **⭐ Star** on GitHub.
