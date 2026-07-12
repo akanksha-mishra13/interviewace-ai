@@ -281,7 +281,7 @@ https://interviewace-ai-backend-76df.onrender.com
 
 ## Interview Page
 
-![Interview Page](screenshots/interview.png.png)
+![Interview Page](screenshots/interview.png)
 
 ## Result Page
 
